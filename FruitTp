@@ -1,0 +1,32 @@
+local Players = game:GetService("Players")
+local Workspace = game:GetService("Workspace")
+
+local player = Players.LocalPlayer
+local character = player.Character or player.CharacterAdded:Wait()
+local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+
+local function scanForFruitTools()
+    local fruitTools = {}
+    for _, descendant in ipairs(Workspace:GetDescendants()) do
+        if descendant:IsA("Tool") and string.find(descendant.Name, "Fruit") then
+            table.insert(fruitTools, descendant)
+        end
+    end
+    return fruitTools
+end
+
+local function teleportToTool(tool)
+    if tool and tool:IsA("Tool") and tool:FindFirstChild("Handle") then
+        humanoidRootPart.CFrame = tool.Handle.CFrame
+    end
+end
+
+while true do
+    local fruitTools = scanForFruitTools()
+    if #fruitTools == 0 then
+        break
+    end
+    for _, tool in ipairs(fruitTools) do
+        teleportToTool(tool)
+    end
+end
