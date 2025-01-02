@@ -1,32 +1,33 @@
-local Players = game:GetService("Players")
-local Workspace = game:GetService("Workspace")
+local Library = loadstring(Game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"))()
 
-local player = Players.LocalPlayer
-local character = player.Character or player.CharacterAdded:Wait()
-local humanoidRootPart = character:WaitForChild("HumanoidRootPart")
+local MuscleLegends = Library:NewWindow("MuscleLegends")
 
-local function scanForFruitTools()
-    local fruitTools = {}
-    for _, descendant in ipairs(Workspace:GetDescendants()) do
-        if descendant:IsA("Tool") and string.find(descendant.Name, "Fruit") then
-            table.insert(fruitTools, descendant)
+local Options = MuscleLegends:NewSection("Options")
+
+local autoPunchRunning = false
+local autoRepRunning = false
+
+Options:CreateToggle("Auto Punch", function(value)
+    if value then
+        autoPunchRunning = true
+        while autoPunchRunning do
+            game:GetService("Players").LocalPlayer.muscleEvent:FireServer("punch", "leftHand")
+            game:GetService("Players").LocalPlayer.muscleEvent:FireServer("punch", "rightHand")
+            wait(0.1)
         end
+    else
+        autoPunchRunning = false
     end
-    return fruitTools
-end
+end)
 
-local function teleportToTool(tool)
-    if tool and tool:IsA("Tool") and tool:FindFirstChild("Handle") then
-        humanoidRootPart.CFrame = tool.Handle.CFrame
+Options:CreateToggle("Auto Rep", function(value)
+    if value then
+        autoRepRunning = true
+        while autoRepRunning do
+            game:GetService("Players").LocalPlayer.muscleEvent:FireServer("rep")
+            wait(0.1)
+        end
+    else
+        autoRepRunning = false
     end
-end
-
-while true do
-    local fruitTools = scanForFruitTools()
-    if #fruitTools == 0 then
-        break
-    end
-    for _, tool in ipairs(fruitTools) do
-        teleportToTool(tool)
-    end
-end
+end)
