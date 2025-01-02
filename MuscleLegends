@@ -1,6 +1,6 @@
 local Library = loadstring(Game:HttpGet("https://raw.githubusercontent.com/bloodball/-back-ups-for-libs/main/wizard"))()
 
-local MuscleLegends = Library:NewWindow("MuscleLegends")
+local MuscleLegends = Library:NewWindow("Muscle Legends")
 
 local Options = MuscleLegends:NewSection("Options")
 
